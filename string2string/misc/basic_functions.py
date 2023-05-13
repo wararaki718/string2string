@@ -6,7 +6,7 @@ def cartesian_product(
     lst2: Union[List[str], List[List[str]]],
     boolList: bool = False,
     list_of_list_separator: str = " ## ",
-) -> Union[List[str], List[List[str]]]:
+) -> Union[List[List[str]], List[str]]:
     """
     This function returns the Cartesian product of two lists of strings (or lists of lists of strings).
 
@@ -22,6 +22,7 @@ def cartesian_product(
         return lst2
     elif lst2 == []:
         return lst1
+
     return [
         s1 + ("" if not (boolList) else list_of_list_separator) + s2
         for s1 in lst1

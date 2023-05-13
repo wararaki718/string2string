@@ -2,8 +2,7 @@
 This module contains a wrapper class for the sacreBLEU metric from https://github.com/mjpost/sacreBLEU.
 """
 
-from typing import Union, Optional, List, Dict
-from string2string.misc.default_tokenizer import Tokenizer
+from typing import Optional, List
 from sacrebleu import corpus_bleu
 
 # Pre-defined tokenizers for sacreBLEU

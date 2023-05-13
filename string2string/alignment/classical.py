@@ -682,8 +682,8 @@ class Hirschberg(NeedlemanWunsch):
     
     # Get the middle index of str2.
     def get_middle_index(self,
-        score_left: List[float],
-        score_right: List[float],
+        score_left: np.ndarray,
+        score_right: np.ndarray,
     ) -> int:
         """
         This function gets the middle index of str2.

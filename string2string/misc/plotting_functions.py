@@ -18,8 +18,8 @@ Coordinate = Union[int, float]
 
 # Plot the pairwise alignment between two strings (or lists of strings)
 def plot_pairwise_alignment(
-    seq1_pieces: Union[str, List[Union[str, int, float]], np.ndarray],
-    seq2_pieces: Union[str, List[Union[str, int, float]], np.ndarray],
+    seq1_pieces: Union[str, Union[List[str], List[int], List[float]], np.ndarray],
+    seq2_pieces: Union[str, Union[List[str], List[int], List[float]], np.ndarray],
     alignment: List[Tuple[int, int]] = [],
     str2colordict: Optional[dict] = None,
     padding_factor: float = 1.4,
@@ -97,12 +97,12 @@ def plot_pairwise_alignment(
     _, ax = plt.subplots(figsize=(2  * max_len * factor, 2 * 2))
 
     # Get the alignment
-    alignment = np.array(alignment)
+    alignment_matrix = np.array(alignment)
 
     # Check if the alignment is not None and not empty
-    if len(alignment) > 0:
-        indices1 = alignment[:, 0]
-        indices2 = alignment[:, 1]
+    if len(alignment_matrix) > 0:
+        indices1 = alignment_matrix[:, 0]
+        indices2 = alignment_matrix[:, 1]
         # Draw the alignment
         for i in range(len(indices1)):
             ax.plot([indices1[i], indices2[i]], [border_to_box, 1.-border_to_box], 'o-',  color='#336699', linewidth=0.75, zorder=2)
@@ -157,7 +157,7 @@ def plot_pairwise_alignment(
 
 # Plot a heatmap
 def plot_heatmap(
-    data: Union[List[List[Union[str, int, float]]], np.ndarray],
+    data: np.ndarray,
     title: str = 'Heatmap',
     x_label: str = 'X',
     y_label: str = 'Y',
@@ -178,7 +178,7 @@ def plot_heatmap(
     This function creates a heatmap visualization based on a given 2D array of data. The input array can represent a variety of data structures, such as a confusion matrix or a correlation matrix, and can be represented as a list of lists or a numpy array. The resulting plot will visually represent the data in the input array using a color-coded grid.
 
     Arguments:
-        data (Union[List[List[Union[str, int, float]]], np.ndarray]): The data to plot.
+        data (np.ndarray): The data to plot.
         title (str, optional): The title of the plot (default: 'Heatmap').
         x_label (str, optional): The label of the x-axis (default: 'X').
         y_label (str, optional): The label of the y-axis (default: 'Y').

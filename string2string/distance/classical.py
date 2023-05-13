@@ -111,15 +111,15 @@ class LevenshteinEditDistance(StringAlgs):
 
     # Compute the Levenshtein edit distance between two strings using memoization
     def compute_recursive_memoization(self,
-        str1: Union[str, List[str]],
-        str2: Union[str, List[str]],
+        str1:str,
+        str2: str,
     ) -> float:
         r"""
         This function computes the Levenshtein edit distance between two strings (or lists of strings) using memoization.
 
         Arguments:
-            str1 (str or list of str): The first string (or list of strings).
-            str2 (str or list of str): The second string (or list of strings).
+            str1 (str): The first string (or list of strings).
+            str2 (str): The second string (or list of strings).
 
         Returns:
             The Levenshtein edit distance between the two strings.
@@ -129,7 +129,7 @@ class LevenshteinEditDistance(StringAlgs):
             * The time complexity of this function is :math:`\mathcal{O}(m n)`, where :math:`m` and :math:`n` are the lengths of the two strings.
         """
         # Initialize the memoization dictionary
-        memoization = {}
+        memoization: Dict[Tuple[str, str], float] = {}
 
         # Compute the Levenshtein edit distance
         return self.compute_memoization_helper(str1, str2, memoization)
@@ -137,16 +137,16 @@ class LevenshteinEditDistance(StringAlgs):
 
     # Compute the Levenshtein edit distance between two strings using memoization (helper function)
     def compute_memoization_helper(self,
-        str1: Union[str, List[str]],
-        str2: Union[str, List[str]],
+        str1: str,
+        str2: str,
         memoization: Dict[Tuple[str, str], float],
     ) -> float:
         r"""
         This is a helper function that computes the Levenshtein edit distance between two strings (or lists of strings) using memoization.
 
         Arguments:
-            str1 (str or list of str): The first string (or list of strings).
-            str2 (str or list of str): The second string (or list of strings).
+            str1 (str): The first string (or list of strings).
+            str2 (str): The second string (or list of strings).
             memoization (dict): The memoization dictionary.
 
         Returns:
