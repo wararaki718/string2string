@@ -22,9 +22,9 @@ class StringAlignment:
     """
     # Initialize the class.
     def __init__(self,
-        match_weight: int = 1.,
-        mismatch_weight: int = -1.,
-        gap_weight: int = -1,
+        match_weight: float = 1.,
+        mismatch_weight: float = -1.,
+        gap_weight: float = -1,
         gap_char: str = "-",
         match_dict: dict = None,
         ) -> None:
@@ -55,15 +55,15 @@ class StringAlignment:
 
 
     def bool_match(self,
-        c1: Union[str, List[str]],
-        c2: Union[str, List[str]],
+        c1: str,
+        c2: str,
     ) -> bool:
         """
         The function returns whether two characters match, according to the match dictionary (if it exists).
 
         Arguments:
-            c1 (str or list of str): The first character or string.
-            c2 (str or list of str): The second character or string.
+            c1 (str): The first character or string.
+            c2 (str): The second character or string.
 
         Returns:
             Whether the two characters match (True or False)
@@ -82,15 +82,15 @@ class StringAlignment:
 
     # Get the match weight.
     def get_match_weight(self, 
-        c1: Union[str, List[str]],
-        c2: Union[str, List[str]],
+        c1: str,
+        c2: str,
     ) -> float:
         """
         This function returns the match weight of two characters.
 
         Arguments:
-            c1 (str or list of str): The first character or string.
-            c2 (str or list of str): The second character or string.
+            c1 (str): The first character or string.
+            c2 (str): The second character or string.
 
         Returns:
             The match weight of the two characters or strings.
@@ -113,13 +113,13 @@ class StringAlignment:
 
     # Get the gap weight.
     def get_gap_weight(self,
-        c: Union[str, List[str]],
+        c: str,
     ) -> float:
         """
         This function returns the gap weight of a character or string.
 
         Arguments:
-            c (str or list of str): The character or string.
+            c (str): The character or string.
 
         Returns:
             The gap weight of the character or string.
@@ -138,15 +138,15 @@ class StringAlignment:
 
     # Get the score of a character pair.
     def get_score(self,
-        c1: Union[str, List[str]],
-        c2: Union[str, List[str]],
+        c1: str,
+        c2: str,
     ) -> float:
         """
         This function returns the score of a character or string pair.
 
         Arguments:
-            c1 (str or list of str): The first character or string.
-            c2 (str or list of str): The second character or string.
+            c1 (str): The first character or string.
+            c2 (str): The second character or string.
 
         Returns:
             The score of the character or string pair.
@@ -237,7 +237,7 @@ class StringAlignment:
         str1: str,
         str2: str,
         separator: str = ' | ',
-    ) -> Tuple[Tuple[List[int], List[int]], List[str], List[str]]:
+    ) -> Tuple[List[Tuple[int, int]], List[str], List[str]]:
         """
         This function returns the indices of the aligned characters, and the two strings separated by the separator.
 
@@ -268,7 +268,7 @@ class StringAlignment:
         num_workers: int = 1,
         method: str = "multiprocessing",
         **kwargs,
-    ) -> List[Tuple[float, Union[List[str], List[List[str]]]]]:
+    ) -> List[Tuple[float, Union[List[str], List[List[str]]]]]: # correct???
         """
         This "meta" function computes the alignment score of multiple pairs of strings (or lists of strings) in parallel.
 
@@ -310,7 +310,7 @@ class NeedlemanWunsch(StringAlignment):
         mismatch_weight: float = -1.,
         gap_weight: float = -1.,
         gap_char: str = "-",
-        match_dict: dict = None,
+        match_dict: Optional[dict] = None,
         ) -> None:
         r"""
         This function initializes the Needleman-Wunsch algorithm, which is used to get the global alignment of sequences (e.g., strings or lists of strings) such as DNA sequences.
@@ -341,7 +341,7 @@ class NeedlemanWunsch(StringAlignment):
         score_matrix: np.ndarray,
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
-    ) -> Tuple[Union[str, List[str]], Union[str, List[str]]]:
+    ) -> Tuple[str, str]:
         r"""
         This function is an auxilary function, used by the get_alignment() function, that backtracks the score matrix to get the aligned strings.
 
@@ -351,7 +351,7 @@ class NeedlemanWunsch(StringAlignment):
             str2: The second string (or list of strings).
         
         Returns:
-            The aligned strings (or list of strings). The aligned strings are padded with spaces to make them the same length.
+            The aligned strings. The aligned strings are padded with spaces to make them the same length.
 
         .. note::
             * The score matrix is assumed to be a 2D numpy array.
@@ -418,7 +418,7 @@ class NeedlemanWunsch(StringAlignment):
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
         return_score_matrix: bool = False,
-    ) -> Tuple[Union[str, List[str]], Union[str, List[str]], Optional[np.ndarray]]:
+    ) -> Union[Tuple[str, str, np.ndarray], Tuple[str, str]]:
         r"""
         This is the main function in the NeedlemanWunsch class that gets the alignment of two strings (or list of strings) by using the Needleman-Wunsch algorithm.
 
@@ -476,11 +476,11 @@ class NeedlemanWunsch(StringAlignment):
 # Hirschberg algorithm (linear space algorithm).
 class Hirschberg(NeedlemanWunsch):
     def __init__(self,
-        match_weight: Union[int, float] = 2,
+        match_weight: Union[int, float] = 2,  # is correct?
         mismatch_weight: Union[int, float] = -1,
         gap_weight: Union[int, float] = -2,
         gap_char: str = '-',
-        match_dict: dict = None,
+        match_dict: Optional[dict] = None,
     ) -> None:
         r"""
         This function initializes the parameters of the Hirschberg algorithm [H1975]_, a space-efficient solution to the global alignment problem. It inherits from the NeedlemanWunsch class.
@@ -519,7 +519,7 @@ class Hirschberg(NeedlemanWunsch):
     def get_alignment(self,
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
-    ) -> Tuple[Union[str, List[str]], Union[str, List[str]]]:
+    ) -> Tuple[str, str]:
         r"""
         This function gets the alignment of two strings (or list of strings) by using the Hirschberg algorithm.
 
@@ -528,7 +528,7 @@ class Hirschberg(NeedlemanWunsch):
             str2: The second string (or list of strings).
 
         Returns:
-            The aligned strings as a tuple of two strings (or list of strings).
+            The aligned strings as a tuple of two strings.
 
         .. note::
             * As a notable improvement of the Needleman-Wunsch algorithm, Hirschberg's algorithm combines both divide-and-conquer and dynamic programming principles. This algorithm provides a space-efficient solution, with a time complexity of :math:`O(nm)`, where :math:`n` and :math:`m` are the lengths of the strings str1 and str2, respectively. Its space complexity, however, is :math:`O(min(n, m))`.
@@ -564,7 +564,7 @@ class Hirschberg(NeedlemanWunsch):
     def get_alignment_helper(self,
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
-    ) -> Tuple[Union[str, List[str]], Union[str, List[str]]]:
+    ) -> Tuple[str, str]:
         """
         This is a helper function that is called by the get_alignment() function. This function gets the alignment of two strings (or list of strings) by using the Hirschberg algorithm.
         
@@ -573,7 +573,7 @@ class Hirschberg(NeedlemanWunsch):
             str2: The second string (or list of strings).
 
         Returns:
-            The aligned strings as a tuple of two strings (or list of strings).
+            The aligned strings as a tuple of two strings.
 
         .. note::
             * We assume that the length of str1 is greater than or equal to the length of str2.
@@ -639,7 +639,7 @@ class Hirschberg(NeedlemanWunsch):
     def nw_score(self,
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
-    ) -> List[float]:
+    ) -> np.ndarray:
         """
         This function returns the last row of the score matrix.
 
@@ -720,11 +720,11 @@ class Hirschberg(NeedlemanWunsch):
 # Smith-Waterman algorithm (local alignment).
 class SmithWaterman(NeedlemanWunsch):
     def __init__(self,
-        match_weight: Union[int, float] = 1,
+        match_weight: Union[int, float] = 1, # is correct?
         mismatch_weight: Union[int, float] = -1,
         gap_weight: Union[int, float] = -1,
         gap_char: str = '-',
-        match_dict: dict = None,
+        match_dict: Optional[dict] = None,
     ) -> None:
         r"""
         This function initializes the class variables of the Smith-Waterman algorithm, used for local alignment of sequences (e.g., strings or lists of strings) such as DNA sequences.
@@ -767,7 +767,7 @@ class SmithWaterman(NeedlemanWunsch):
         score_matrix: np.ndarray,
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
-    ) -> Tuple[Union[str, List[str]], Union[str, List[str]]]:
+    ) -> Tuple[str, str]:
         """
         This function overrides the backtrack function of the NeedlemanWunsch class to get an optimal local alignment between two strings (or list of strings).
 
@@ -833,7 +833,7 @@ class SmithWaterman(NeedlemanWunsch):
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
         return_score_matrix: bool = False,
-    ) -> Tuple[Union[str, List[str]], Union[str, List[str]]]:
+    ) -> Union[Tuple[str, str, np.ndarray], Tuple[str, str]]:
         """
         This function overrides the get_alignment function of the NeedlemanWunsch class to get the alignment of two strings (or list of strings) by using the Smith-Waterman algorithm.
 
@@ -1172,7 +1172,7 @@ class LongestCommonSubstring(LongestCommonSubsequence):
         str1: Union[str, List[str]],
         str2: Union[str, List[str]],
         returnCandidates: bool = False,
-    ) -> Tuple[float, Union[List[str], List[List[str]]]]:
+    ) -> Tuple[int, Optional[Union[List[str], List[List[str]]]]]:
         """
         This function computes the longest common substring between two strings (or lists of strings).
 
